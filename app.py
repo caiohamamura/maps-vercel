@@ -1,6 +1,8 @@
 # Flask hello world
+from io import BytesIO
 import flask
 import os
+import rasterio
 from rasterio.io import MemoryFile
 import requests
 from flask_cors import CORS
@@ -63,21 +65,20 @@ def raster(dataset_id):
         
         # Calculate statistics (min, max, mean and std)
 
-    with MemoryFile(raster_cache[dataset_id]) as memfile:
-        with memfile.open() as src:
-            # Ignore no data
-            data = src.read(1, masked=True)
-            min = data.min()
-            max = data.max()
-            mean = data.mean()
-            std = data.std()
+    with rasterio.open(BytesIO(raster_cache[dataset_id])) as src:
+        # Ignore no data
+        data = src.read(1, masked=True)
+        min = data.min()
+        max = data.max()
+        mean = data.mean()
+        std = data.std()
 
-            return flask.jsonify({
-                'min': str(min),
-                'max': str(max),
-                'mean': str(mean),
-                'std': str(std)
-            })
+        return flask.jsonify({
+            'min': str(min),
+            'max': str(max),
+            'mean': str(mean),
+            'std': str(std)
+        })
 
 
 
