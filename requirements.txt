@@ -4,4 +4,4 @@ fiona==1.10.1
 numpy==2.2.1
 rasterio==1.4.3
 waitress==3.0.2
-requests=2.32.3
+requests==2.32.3
