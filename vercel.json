@@ -1,0 +1,24 @@
+{
+    "version": 2,
+    "builds": [
+      {
+        "src": "app.py",
+        "use": "@vercel/python",
+        "config": {
+          "runtime": "python3.9"
+        }
+      }
+    ],
+    "routes": [
+          {
+            "src": "/(.*)",
+            "methods": ["POST", "GET"],
+            "dest": "app.py"
+          },
+          {
+            "src": "/raster/(.*)",
+            "methods": ["POST", "GET"],
+            "dest": "app.py"
+          }
+    ]
+}
