@@ -6,6 +6,7 @@ import rasterio
 from rasterio.io import MemoryFile
 import requests
 from flask_cors import CORS
+import re
 
 
 app = flask.Flask(__name__)
@@ -51,6 +52,7 @@ def video():
 def raster(dataset_id):
     if not dataset_id in raster_cache:
         file_url = 'https://dd12b372tby3d.cloudfront.net/' + raster_ids[dataset_id]
+        # file_url = 'C:/Users/caioh/Downloads/maps_clip/' + raster_ids[dataset_id]
         
         # Add Origin and Referrer as http://localhost:8001
         headers = {
@@ -74,10 +76,12 @@ def raster(dataset_id):
         std = data.std()
 
         return flask.jsonify({
-            'min': str(min),
-            'max': str(max),
-            'mean': str(mean),
-            'std': str(std)
+            'alias': re.sub(r'(\d{4})', r'', dataset_id.lower()),
+            'year': int(re.search(r'(\d{4})', dataset_id).group(0)),
+            'min': float(min),
+            'max': float(max),
+            'mean': float(mean),
+            'std': float(std)
         })
 
 
