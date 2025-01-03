@@ -50,24 +50,9 @@ def video():
 
 @app.route('/raster/<string:dataset_id>')
 def raster(dataset_id):
-    if not dataset_id in raster_cache:
-        file_url = 'https://dd12b372tby3d.cloudfront.net/' + raster_ids[dataset_id]
-        # file_url = 'C:/Users/caioh/Downloads/maps_clip/' + raster_ids[dataset_id]
-        
-        # Add Origin and Referrer as http://localhost:8001
-        headers = {
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36",
-            'Origin': 'http://localhost:8001',
-            'Referer': 'http://localhost:8001/raster/' + dataset_id,
-        }
+    file_url = raster_ids[dataset_id]
 
-
-        response = requests.get(file_url, headers=headers)
-        raster_cache[dataset_id] = response.content
-        
-        # Calculate statistics (min, max, mean and std)
-
-    with rasterio.open(BytesIO(raster_cache[dataset_id])) as src:
+    with rasterio.open(file_url) as src:
         # Ignore no data
         data = src.read(1, masked=True)
         min = data.min()
